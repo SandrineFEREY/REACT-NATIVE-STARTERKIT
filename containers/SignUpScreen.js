@@ -18,29 +18,40 @@ import Constants from "expo-constants";
 import axios from "axios";
 
 export default function SignUpScreen({ setToken, navigation }) {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [description, setDescription] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState("testtttt3456@mail");
+  const [username, setUsername] = useState("testttttttt3456");
+  const [description, setDescription] = useState("test3456");
+  const [password, setPassword] = useState("test356");
+  const [confirmPassword, setConfirmPassword] = useState("test35");
 
-  const handleSubmit = async (event) => {
-    try {
-      event.preventDefault();
+  const [error, setError] = useState("");
 
-      const response = await axios.post(
-        "https://express-airbnb-api.herokuapp.com/user/sign_up",
-        {
-          email: email,
-          username: username,
-          description: description,
-          password: password,
+  const handleSubmit = async () => {
+    if (email && username && description && password && confirmPassword) {
+      setError("");
+
+      if (password === confirmPassword) {
+        try {
+          const response = await axios.post(
+            "https://express-airbnb-api.herokuapp.com/user/sign_up",
+            {
+              email: email,
+              username: username,
+              description: description,
+              password: password,
+            }
+          );
+          console.log(response.data);
+          setToken(response.data.token);
+        } catch (error) {
+          console.log(error.response.status);
+          console.log(error.response.data);
         }
-      );
-      console.log(response.data);
-    } catch (error) {
-      console.log(error.response.status);
-      console.log(error.response.data);
+      } else {
+        setError("Les 2 mots de passe ne sont pas identiques");
+      }
+    } else {
+      setError("Remplir tous les champs");
     }
   };
 
@@ -102,6 +113,7 @@ export default function SignUpScreen({ setToken, navigation }) {
           />
           <View style={styles.signupAccount}>
             {/* <Button title="Sign up" type="submit" /> */}
+            <Text style={styles.error}>{error}</Text>
             <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
               <Text>Sign up</Text>
             </TouchableOpacity>
@@ -175,5 +187,10 @@ const styles = StyleSheet.create({
 
   account: {
     marginTop: 20,
+  },
+
+  error: {
+    color: "red",
+    marginBottom: 5,
   },
 });
