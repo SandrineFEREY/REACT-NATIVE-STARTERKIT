@@ -18,11 +18,11 @@ import Constants from "expo-constants";
 import axios from "axios";
 
 export default function SignUpScreen({ setToken, navigation }) {
-  const [email, setEmail] = useState("testtttt3456@mail");
-  const [username, setUsername] = useState("testttttttt3456");
-  const [description, setDescription] = useState("test3456");
-  const [password, setPassword] = useState("test356");
-  const [confirmPassword, setConfirmPassword] = useState("test35");
+  const [email, setEmail] = useState("testtttt34567@mail");
+  const [username, setUsername] = useState("testttttttt34567");
+  const [description, setDescription] = useState("test34567");
+  const [password, setPassword] = useState("test100");
+  const [confirmPassword, setConfirmPassword] = useState("test100");
 
   const [error, setError] = useState("");
 
