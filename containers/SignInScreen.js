@@ -53,7 +53,6 @@ export default function SignInScreen({ setToken }) {
         <View style={styles.logoTitle}>
           <Image
             style={styles.logo}
-            rezideMode="contain"
             source={require("../assets/images/Airbnb-logo.jpg")}
           />
           <Text style={styles.signin}>Sign in</Text>
