@@ -29,9 +29,9 @@ export default function HomeScreen() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://express-airbnb-api.herokuapp.com/rooms"
+          "https://express-airbnb-api.herokuapp.com/rooms/:id"
         );
-        setData(response.data);
+        setData(response.data.id);
         setIsLoading(false);
       } catch (error) {
         console.log(error);
@@ -54,11 +54,7 @@ export default function HomeScreen() {
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("Room");
-                }}
-              >
+              <View>
                 <ImageBackground
                   style={styles.bgImage}
                   source={{ uri: item.photos[0].url }}
@@ -77,7 +73,7 @@ export default function HomeScreen() {
                     source={{ uri: item.user.account.photo.url }}
                   ></Image>
                 </View>
-              </TouchableOpacity>
+              </View>
             );
           }}
         />
