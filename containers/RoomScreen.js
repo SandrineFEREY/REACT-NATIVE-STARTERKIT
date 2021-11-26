@@ -20,26 +20,26 @@ import Constants from "expo-constants";
 import axios from "axios";
 
 const RoomScreen = ({ route }) => {
-  console.log(route);
+  console.log(route.params.id);
 
-  const [data, seData] = useState();
-  const [isLoading, setIsLoading] = useState(true),
-    useEffect =
-      (() => {
-        const fetchData = async () => {
-          try {
-            const response = await axios.get(
-              `https://express-airbnb-api.herokuapp.com/rooms/${route.params.id}`
-            );
-            setData(response.data);
-            setIsLoading(false);
-          } catch (error) {
-            console.log(error.message);
-          }
-        };
-        fetchData();
-      },
-      []);
+  const [data, setData] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://express-airbnb-api.herokuapp.com/rooms/${route.params.id}`
+        );
+        console.log(response.data);
+        setData(response.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -47,9 +47,10 @@ const RoomScreen = ({ route }) => {
         <Text>Text</Text>
         <ImageBackground
           style={styles.bgImage}
-          source={{ uri: route.params.id.url }}
-        ></ImageBackground>
-        <View></View>
+          source={{ uri: data.photos[0].url }}
+        >
+          <Text style={styles.price}>{data.price}</Text>
+        </ImageBackground>
       </View>
     </SafeAreaView>
   );
