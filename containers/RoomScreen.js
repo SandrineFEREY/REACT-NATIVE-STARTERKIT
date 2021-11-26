@@ -19,70 +19,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Constants from "expo-constants";
 import axios from "axios";
 
-export default function HomeScreen() {
-  const navigation = useNavigation();
+const RoomScreen = ({ route }) => {
+  console.log(route);
 
-  const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "https://express-airbnb-api.herokuapp.com/rooms/:id"
-        );
-        setData(response.data.id);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  return isLoading === true ? (
-    <ActivityIndicator
-      size="large"
-      color="purple"
-      style={{ fex: 1, marginTop: 20 }}
-    />
-  ) : (
+  return (
     <SafeAreaView style={styles.safeAreaView}>
-      <KeyboardAwareScrollView>
-        <FlatList
-          data={data}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => {
-            return (
-              <View>
-                <ImageBackground
-                  style={styles.bgImage}
-                  source={{ uri: item.photos[0].url }}
-                >
-                  <View>
-                    <Text style={styles.price}>{item.price}</Text>
-                  </View>
-                </ImageBackground>
-
-                <View style={styles.titleUser}>
-                  <Text style={styles.title} numberOfLines={1}>
-                    {item.title}
-                  </Text>
-                  <Image
-                    style={styles.photoUser}
-                    source={{ uri: item.user.account.photo.url }}
-                  ></Image>
-                </View>
-              </View>
-            );
-          }}
-        />
-
-        <View></View>
-      </KeyboardAwareScrollView>
+      <View>
+        <Text>Text</Text>
+      </View>
     </SafeAreaView>
   );
-}
+};
+
+export default RoomScreen;
 
 const styles = StyleSheet.create({
   safeAreaView: {
