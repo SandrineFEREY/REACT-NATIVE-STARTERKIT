@@ -22,10 +22,34 @@ import axios from "axios";
 const RoomScreen = ({ route }) => {
   console.log(route);
 
+  const [data, seData] = useState();
+  const [isLoading, setIsLoading] = useState(true),
+    useEffect =
+      (() => {
+        const fetchData = async () => {
+          try {
+            const response = await axios.get(
+              `https://express-airbnb-api.herokuapp.com/rooms/${route.params.id}`
+            );
+            setData(response.data);
+            setIsLoading(false);
+          } catch (error) {
+            console.log(error.message);
+          }
+        };
+        fetchData();
+      },
+      []);
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View>
         <Text>Text</Text>
+        <ImageBackground
+          style={styles.bgImage}
+          source={{ uri: route.params.id.url }}
+        ></ImageBackground>
+        <View></View>
       </View>
     </SafeAreaView>
   );

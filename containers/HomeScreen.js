@@ -19,8 +19,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Constants from "expo-constants";
 import axios from "axios";
 
-export default function HomeScreen() {
-  const navigation = useNavigation();
+export default function HomeScreen({ navigation }) {
+  // const navigation = useNavigation();
 
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -48,42 +48,41 @@ export default function HomeScreen() {
     />
   ) : (
     <SafeAreaView style={styles.safeAreaView}>
-      <KeyboardAwareScrollView>
-        <FlatList
-          data={data}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("Room", { id: item._id });
-                }}
+      {/* <KeyboardAwareScrollView> */}
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Room", { id: item._id });
+              }}
+            >
+              <ImageBackground
+                style={styles.bgImage}
+                source={{ uri: item.photos[0].url }}
               >
-                <ImageBackground
-                  style={styles.bgImage}
-                  source={{ uri: item.photos[0].url }}
-                >
-                  <View>
-                    <Text style={styles.price}>{item.price}</Text>
-                  </View>
-                </ImageBackground>
-
-                <View style={styles.titleUser}>
-                  <Text style={styles.title} numberOfLines={1}>
-                    {item.title}
-                  </Text>
-                  <Image
-                    style={styles.photoUser}
-                    source={{ uri: item.user.account.photo.url }}
-                  ></Image>
+                <View>
+                  <Text style={styles.price}>{item.price}</Text>
                 </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
+              </ImageBackground>
 
-        <View></View>
-      </KeyboardAwareScrollView>
+              <View style={styles.titleUser}>
+                <Text style={styles.title} numberOfLines={1}>
+                  {item.title}
+                </Text>
+                <Image
+                  style={styles.photoUser}
+                  source={{ uri: item.user.account.photo.url }}
+                ></Image>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
+      />
+
+      {/* </KeyboardAwareScrollView> */}
     </SafeAreaView>
   );
 }
