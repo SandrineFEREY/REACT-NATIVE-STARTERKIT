@@ -11,6 +11,7 @@ import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
 import SplashScreen from "./containers/SplashScreen";
 import RoomScreen from "./containers/RoomScreen";
+import { Image } from "react-native";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -77,7 +78,7 @@ export default function App() {
                 <Tab.Screen
                   name="TabHome"
                   options={{
-                    tabBarLabel: "Home",
+                    tabBarLabel: "Home !",
                     tabBarIcon: ({ color, size }) => (
                       <Ionicons name={"ios-home"} size={size} color={color} />
                     ),
@@ -104,7 +105,7 @@ export default function App() {
                       >
                         {(props) => <RoomScreen {...props} />}
                       </Stack.Screen>
-
+                      {/* 
                       <Stack.Screen
                         name="Profile"
                         options={{
@@ -112,32 +113,38 @@ export default function App() {
                         }}
                       >
                         {() => <ProfileScreen />}
-                      </Stack.Screen>
+                      </Stack.Screen> */}
                     </Stack.Navigator>
                   )}
                 </Tab.Screen>
+
+                {/* <ion-icon name="person"></ion-icon> */}
+
                 <Tab.Screen
-                  name="TabSettings"
+                  name="TabProfile"
                   options={{
-                    tabBarLabel: "Settings",
+                    tabBarLabel: "My profile !",
                     tabBarIcon: ({ color, size }) => (
-                      <Ionicons
-                        name={"ios-options"}
-                        size={size}
-                        color={color}
-                      />
+                      <Ionicons name={"person"} size={size} color={color} />
                     ),
                   }}
                 >
                   {() => (
                     <Stack.Navigator>
                       <Stack.Screen
-                        name="Settings"
                         options={{
-                          title: "Settings",
+                          headerTitle: (props) => (
+                            <Image
+                              style={{ width: 30, height: 30 }}
+                              source={require("./assets/images/Airbnb-logo.jpg")}
+                            />
+                          ),
+                          // title: "My Profile",
+                          // headerShown: false,
                         }}
+                        name="Profile"
                       >
-                        {() => <SettingsScreen setToken={setToken} />}
+                        {() => <ProfileScreen setToken={setToken} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
