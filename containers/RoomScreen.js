@@ -19,11 +19,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Constants from "expo-constants";
 import axios from "axios";
 
+import { FontAwesome } from "@expo/vector-icons";
+
 const RoomScreen = ({ route }) => {
   console.log(route.params.id);
 
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
+
+  const [isTextFull, setIsTextFull] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,16 +45,66 @@ const RoomScreen = ({ route }) => {
     fetchData();
   }, []);
 
-  return (
+  const displayStars = (ratingValue) => {
+    let tab = [];
+    const isDecimal = !Number.isInteger(ratingValue);
+    const flooredNum = Math.floor(ratingValue);
+
+    for (let i = 1; i <= 5; i++) {
+      if (ratingValue >= i) {
+        tab.push(<FontAwesome name="star" size={24} color="orange" key={i} />);
+      }
+
+      if (ratingValue < i && tab.length < 5) {
+        tab.push(<FontAwesome name="star" size={24} color="grey" key={i} />);
+      }
+
+      if (flooredNum === i && isDecimal) {
+        tab.push(
+          <FontAwesome name="star-half-empty" size={24} color="black" />
+        );
+      }
+    }
+
+    return tab;
+  };
+
+  return isLoading ? (
+    <ActivityIndicator
+      size="large"
+      color="purple"
+      style={{ fex: 1, marginTop: 20 }}
+    />
+  ) : (
     <SafeAreaView style={styles.safeAreaView}>
       <View>
-        <Text>Text</Text>
         <ImageBackground
           style={styles.bgImage}
           source={{ uri: data.photos[0].url }}
         >
           <Text style={styles.price}>{data.price}</Text>
         </ImageBackground>
+        <View style={styles.titleUser}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.title} numberOfLines={1}>
+              {data.title}
+            </Text>
+            <View style={styles.stars}>{displayStars(3.5)}</View>
+          </View>
+
+          <Image
+            style={styles.photoUser}
+            source={{ uri: data.user.account.photo.url }}
+          ></Image>
+        </View>
+        <Text
+          numberOfLines={isTextFull ? null : 3}
+          onPress={() => {
+            setIsTextFull(!isTextFull);
+          }}
+        >
+          {data.description}
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -94,6 +148,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     flex: 1,
+  },
+
+  stars: {
+    flexDirection: "row",
   },
 
   photoUser: {

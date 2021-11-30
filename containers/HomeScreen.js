@@ -19,6 +19,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Constants from "expo-constants";
 import axios from "axios";
 
+import { FontAwesome } from "@expo/vector-icons";
+
 export default function HomeScreen({ navigation }) {
   // const navigation = useNavigation();
 
@@ -39,6 +41,30 @@ export default function HomeScreen({ navigation }) {
     };
     fetchData();
   }, []);
+
+  const displayStars = (ratingValue) => {
+    let tab = [];
+    const isDecimal = !Number.isInteger(ratingValue);
+    const flooredNum = Math.floor(ratingValue);
+
+    for (let i = 1; i <= 5; i++) {
+      if (ratingValue >= i) {
+        tab.push(<FontAwesome name="star" size={24} color="orange" key={i} />);
+      }
+
+      if (ratingValue < i && tab.length < 5) {
+        tab.push(<FontAwesome name="star" size={24} color="grey" key={i} />);
+      }
+
+      if (flooredNum === i && isDecimal) {
+        tab.push(
+          <FontAwesome name="star-half-empty" size={24} color="black" />
+        );
+      }
+    }
+
+    return tab;
+  };
 
   return isLoading === true ? (
     <ActivityIndicator
@@ -69,9 +95,12 @@ export default function HomeScreen({ navigation }) {
               </ImageBackground>
 
               <View style={styles.titleUser}>
-                <Text style={styles.title} numberOfLines={1}>
-                  {item.title}
-                </Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.title} numberOfLines={1}>
+                    {item.title}
+                  </Text>
+                  <View style={styles.stars}>{displayStars(3.5)}</View>
+                </View>
                 <Image
                   style={styles.photoUser}
                   source={{ uri: item.user.account.photo.url }}
@@ -129,5 +158,9 @@ const styles = StyleSheet.create({
     height: 80,
     width: 80,
     borderRadius: 50,
+  },
+
+  stars: {
+    flexDirection: "row",
   },
 });
