@@ -20,11 +20,13 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [userToken, setUserToken] = useState(null);
 
-  const setToken = async (token) => {
+  const setToken = async (token, id) => {
     if (token) {
       await AsyncStorage.setItem("userToken", token);
+      await AsyncStorage.setItem("userId", id);
     } else {
       await AsyncStorage.removeItem("userToken");
+      await AsyncStorage.removeItem("userId");
     }
 
     setUserToken(token);

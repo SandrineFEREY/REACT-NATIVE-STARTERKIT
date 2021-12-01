@@ -18,11 +18,11 @@ import Constants from "expo-constants";
 import axios from "axios";
 
 export default function SignUpScreen({ setToken, navigation }) {
-  const [email, setEmail] = useState("testtttt34567@mail");
-  const [username, setUsername] = useState("testttttttt34567");
-  const [description, setDescription] = useState("test34567");
-  const [password, setPassword] = useState("test100");
-  const [confirmPassword, setConfirmPassword] = useState("test100");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [description, setDescription] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [error, setError] = useState("");
 
@@ -42,7 +42,7 @@ export default function SignUpScreen({ setToken, navigation }) {
             }
           );
           console.log(response.data);
-          setToken(response.data.token);
+          setToken(response.data.token, response.data.id);
         } catch (error) {
           console.log(error.response.status);
           console.log(error.response.data);
@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
     width: 100,
     marginBottom: 20,
   },
+
   signup: {
     fontWeight: "bold",
     fontSize: 25,
