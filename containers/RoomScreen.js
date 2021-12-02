@@ -73,7 +73,7 @@ const RoomScreen = ({ route }) => {
     <ActivityIndicator
       size="large"
       color="purple"
-      style={{ fex: 1, marginTop: 20 }}
+      style={{ flex: 1, marginTop: 20 }}
     />
   ) : (
     <SafeAreaView style={styles.safeAreaView}>

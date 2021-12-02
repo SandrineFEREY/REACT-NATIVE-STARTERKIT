@@ -58,7 +58,7 @@ export default function HomeScreen({ navigation }) {
 
       if (flooredNum === i && isDecimal) {
         tab.push(
-          <FontAwesome name="star-half-empty" size={24} color="black" />
+          <FontAwesome name="star-half-empty" size={24} color="black" key={i} />
         );
       }
     }

@@ -25,9 +25,9 @@ export default function SignInScreen({ setToken }) {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async () => {
     try {
-      event.preventDefault();
+      // event.preventDefault(); // sur le web c'est important mais pas sur mobile
       const response = await axios.post(
         "https://express-airbnb-api.herokuapp.com/user/log_in",
         {

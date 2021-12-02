@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -37,8 +38,8 @@ export default function ProfileScreen({ setToken }) {
           }
         );
         console.log(response.data);
-        //  ==> ce console.log est important pour avoir les infos en objet dans le terminal
-        setData(response.data);
+        //  ==> ce console.log est important pour récupérer les infos en objet dans le terminal (mail, mot de passe et description) crées à l'insciption
+        setData(response.data); // ici les infos peuvent être affichés
         setIsLoading(false);
       } catch (error) {
         console.log(error.message);
@@ -47,65 +48,96 @@ export default function ProfileScreen({ setToken }) {
     fetchData();
   }, []);
 
+  //changer son adresse email, son nom et sa description :
+
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [description, setDescription] = useState("");
+
+  //donc écrire une fonction qui fait une requête vers "https://express-airbnb-api.herokuapp.com/user/update" en put
+
+  const updateProfile = async () => {
+    // const userToken = await AsyncStorage.getItem("userToken");
+
+    const response = await axios.put(
+      "https://express-airbnb-api.herokuapp.com/user/update",
+
+      {
+        email: email,
+        username: username,
+        description: description,
+
+        //   headers: {
+        //     authorization: `Bearer ${userToken}`,
+        //   },
+      }
+    );
+    console.log(response.data);
+  };
   return isLoading ? (
     <ActivityIndicator
       size="large"
       color="purple"
-      style={{ fex: 1, marginTop: 20 }}
+      style={{ flex: 1, marginTop: 20 }}
     />
   ) : (
     <SafeAreaView style={styles.safeAreaView}>
-      <Image style={styles.photoUser} source={{ uri: data.photo }} />
-      <Text>{data.email}</Text>
-      <Text>{data.username}</Text>
-      <Text>{data.description}</Text>
-      {/* <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView>
         <View style={styles.photoTitle}>
-          <Text>Photo</Text>
-          <Image
-            style={styles.photoUser}
-            source={{ uri: data.user.account.photo.url }}
-          />
+          <Image style={styles.photoUser} source={{ uri: data.photo }} />
+
+          {/* {data.photo ? (
+            <Image style={styles.photoUser} source={{ uri: data.photo }} />
+          ) : (
+            <Image une image avatar standard /> <i class="fal fa-user"></i>
+          )} */}
         </View>
+        {/* // pas de photo pour l'instant pour ce username sandrine que j'ai crée en m'inscrivant dans signup, juste un emplacement disponible pour qu'elle s'affiche, ici un rond rouge*/}
+
+        {/* <Text>{data.email}</Text> */}
         <View>
           <TextInput
             style={styles.input}
-            placeholder="email"
             type="email"
+            placeholder={data.email}
             // value={email}
-            // onChangeText={(text) => {
-            //   setEmail(text);
-            // }}
+            onChangeText={(text) => {
+              setEmail(text);
+            }}
           />
+
+          {/* <Text>{data.username}</Text> */}
           <TextInput
             style={styles.input}
-            placeholder="username"
+            placeholder={data.username}
             type="username"
             // value={username}
-            // onChangeText={(text) => {
-            //   setUsername(text);
-            // }}
+            onChangeText={(text) => {
+              setUsername(text);
+            }}
           />
+          {/* <Text>{data.description}</Text> */}
           <TextInput
             style={styles.inputDescription}
-            placeholder="Describe yourself in a few words..."
+            placeholder={data.description}
             type="description"
-            // value={description}
-            // onChangeText={(text) => {
-            //   setDescription(text);
-            // }}
+            value={description}
+            onChangeText={(text) => {
+              setDescription(text);
+            }}
           />
-          <View style={styles.btns}>
-            <TouchableOpacity>
-              <Text style={styles.btn}>Update</Text>
-            </TouchableOpacity>
-           
-          </View>
         </View>
-      </KeyboardAwareScrollView> */}
-      <TouchableOpacity onPress={() => setToken(null, null)}>
-        <Text style={styles.btn}>Log out</Text>
-      </TouchableOpacity>
+
+        <View style={styles.btns}>
+          <TouchableOpacity onPress={updateProfile}>
+            <Text style={styles.btn}>Update</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => setToken(null, null)}>
+            <Text style={styles.btn}>Log out</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }
@@ -123,8 +155,6 @@ const styles = StyleSheet.create({
   photoTitle: {
     alignItems: "center",
     marginBottom: 40,
-    borderWidth: 2,
-    borderColor: "red",
   },
 
   photoUser: {
