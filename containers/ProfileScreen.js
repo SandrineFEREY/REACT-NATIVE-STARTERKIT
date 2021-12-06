@@ -42,7 +42,7 @@ export default function ProfileScreen({ setToken }) {
         setData(response.data); // ici les infos peuvent être affichés
         setIsLoading(false);
       } catch (error) {
-        console.log(error.message);
+        console.log(error.response);
       }
     };
     fetchData();
@@ -57,23 +57,60 @@ export default function ProfileScreen({ setToken }) {
   //donc écrire une fonction qui fait une requête vers "https://express-airbnb-api.herokuapp.com/user/update" en put
 
   const updateProfile = async () => {
-    // const userToken = await AsyncStorage.getItem("userToken");
+    const userToken = await AsyncStorage.getItem("userToken");
 
-    const response = await axios.put(
-      "https://express-airbnb-api.herokuapp.com/user/update",
+    // console.log(userToken);
 
-      {
-        email: email,
-        username: username,
-        description: description,
+    try {
+      const response = await axios.put(
+        "https://express-airbnb-api.herokuapp.com/user/update",
 
-        //   headers: {
-        //     authorization: `Bearer ${userToken}`,
-        //   },
-      }
-    );
-    console.log(response.data);
+        {
+          email: email,
+          username: username,
+          description: description,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+    } catch (error) {
+      console.log(error.response);
+    }
   };
+
+  // ajouter ou modifier la photo de profile de l'ulisateur avec cette route : https://express-airbnb-api.herokuapp.com/user/upload_picture
+
+  const [picture, setPicture] = useState();
+
+  const uplaodPicture = async () => {
+    const userToken = await AsyncStorage.getItem("userToken");
+
+    console.log(userToken);
+
+    //   try {
+    //     const response = await axios.put(
+    //       "https://express-airbnb-api.herokuapp.com/user/upload_picture",
+    //       {
+    //         picture: picture,
+    //       },
+    //       {
+    //         headers: {
+    //           authorization: `Bearer ${userToken}`,
+    //         },
+    //       }
+    //     );
+    //     console.log(response.data);
+    //     setPicture();
+    //   } catch (error) {
+    //     console.log(error.response);
+    //   }
+  };
+
   return isLoading ? (
     <ActivityIndicator
       size="large"
@@ -83,16 +120,26 @@ export default function ProfileScreen({ setToken }) {
   ) : (
     <SafeAreaView style={styles.safeAreaView}>
       <KeyboardAwareScrollView>
-        <View style={styles.photoTitle}>
-          <Image style={styles.photoUser} source={{ uri: data.photo }} />
-
-          {/* {data.photo ? (
-            <Image style={styles.photoUser} source={{ uri: data.photo }} />
-          ) : (
-            <Image une image avatar standard /> <i class="fal fa-user"></i>
-          )} */}
+        <View style={styles.images}>
+          <View style={styles.photoTitle}>
+            {/* // pas de photo pour l'instant pour ce username sandrine que j'ai crée en m'inscrivant dans signup, juste un emplacement disponible pour qu'elle s'affiche, ici un rond rouge*/}
+            {/* <Image style={styles.photoUser} source={{ uri: data.photo }} /> */}
+            {data.photo ? (
+              <Image style={styles.photoUser} source={{ uri: data.photo }} />
+            ) : (
+              <Ionicons style={styles.iconPerso} name={"person-outline"} />
+            )}
+            {/* <Image une image avatar standard /> */}
+          </View>
+          <View style={styles.icons}>
+            <Ionicons
+              style={styles.iconImages}
+              name={"images"}
+              onPress={uplaodPicture}
+            ></Ionicons>
+            <Ionicons style={styles.iconCamera} name={"camera"}></Ionicons>
+          </View>
         </View>
-        {/* // pas de photo pour l'instant pour ce username sandrine que j'ai crée en m'inscrivant dans signup, juste un emplacement disponible pour qu'elle s'affiche, ici un rond rouge*/}
 
         {/* <Text>{data.email}</Text> */}
         <View>
@@ -152,17 +199,46 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
 
+  images: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+
   photoTitle: {
     alignItems: "center",
     marginBottom: 40,
   },
 
   photoUser: {
-    height: 80,
-    width: 80,
+    height: 100,
+    width: 100,
     borderWidth: 1,
     borderColor: "red",
     borderRadius: 50,
+  },
+
+  iconPerso: {
+    fontSize: 60,
+    textAlign: "center",
+
+    height: 100,
+    width: 100,
+    borderWidth: 1,
+    borderColor: "red",
+    borderRadius: 50,
+  },
+  icons: {
+    marginLeft: 20,
+    justifyContent: "space-around",
+    marginBottom: 40,
+  },
+
+  iconImages: {
+    fontSize: 25,
+  },
+
+  iconCamera: {
+    fontSize: 25,
   },
 
   input: {
