@@ -42,6 +42,7 @@ export default function ProfileScreen({ setToken }) {
         //  ==> ce console.log est important pour récupérer les infos en objet dans le terminal (mail, mot de passe et description) crées à l'insciption
         setData(response.data); // ici les infos peuvent être affichés
         setIsLoading(false);
+        console.log("tom");
       } catch (error) {
         console.log(error.response);
       }
@@ -86,30 +87,41 @@ export default function ProfileScreen({ setToken }) {
 
   // ajouter ou modifier la photo (image) de profile de l'ulisateur avec cette route : https://express-airbnb-api.herokuapp.com/user/upload_picture
 
-  const [image, setImage] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [upLoading, setUpLoading] = useState(false);
 
-  const handleImagePicked = async () => {
+  const handleImagePicked = async (picture) => {
+    setUpLoading(true);
     const userToken = await AsyncStorage.getItem("userToken");
+    const tab = picture.uri.split(".");
+    const formData = new FormData();
+    formData.append("photo", {
+      uri: picture.uri,
+      name: `photo.${tab[1]}`,
+      type: `image/${tab[1]}`,
+    });
 
     try {
       const response = await axios.put(
         "https://express-airbnb-api.herokuapp.com/user/upload_picture",
+        formData,
 
         {
           headers: {
             authorization: `Bearer ${userToken}`,
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-      setImage(response.data);
-      setIsLoading(true);
+      console.log(response.data);
+      setData(response.data);
+      setUpLoading(false);
     } catch (error) {
-      console.log(error.response);
+      console.log(error.message);
     }
   };
 
-  return isLoading ? (
+  return isLoading || upLoading ? (
     <ActivityIndicator
       size="large"
       color="purple"
@@ -122,8 +134,11 @@ export default function ProfileScreen({ setToken }) {
           <View style={styles.photoTitle}>
             {/* // pas de photo pour l'instant pour ce username sandrine que j'ai crée en m'inscrivant dans signup, juste un emplacement disponible pour qu'elle s'affiche, ici un rond rouge*/}
             {/* <Image style={styles.photoUser} source={{ uri: data.photo }} /> */}
-            {data.photo ? (
-              <Image style={styles.photoUser} source={{ uri: data.photo }} />
+            {data.photo.url ? (
+              <Image
+                style={styles.photoUser}
+                source={{ uri: data.photo.url }}
+              />
             ) : (
               <Ionicons style={styles.iconPerso} name={"person-outline"} />
             )}
@@ -143,6 +158,7 @@ export default function ProfileScreen({ setToken }) {
                       allowsEditing: true,
                       aspect: [4, 3],
                     });
+                  console.log(pickerResult);
                   handleImagePicked(pickerResult);
                 }
               }}
