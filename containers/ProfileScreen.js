@@ -13,6 +13,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import * as ImagePicker from "expo-image-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Constants from "expo-constants";
 import axios from "axios";
@@ -83,32 +84,29 @@ export default function ProfileScreen({ setToken }) {
     }
   };
 
-  // ajouter ou modifier la photo de profile de l'ulisateur avec cette route : https://express-airbnb-api.herokuapp.com/user/upload_picture
+  // ajouter ou modifier la photo (image) de profile de l'ulisateur avec cette route : https://express-airbnb-api.herokuapp.com/user/upload_picture
 
-  const [picture, setPicture] = useState();
+  const [image, setImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const uplaodPicture = async () => {
+  const handleImagePicked = async () => {
     const userToken = await AsyncStorage.getItem("userToken");
 
-    console.log(userToken);
+    try {
+      const response = await axios.put(
+        "https://express-airbnb-api.herokuapp.com/user/upload_picture",
 
-    //   try {
-    //     const response = await axios.put(
-    //       "https://express-airbnb-api.herokuapp.com/user/upload_picture",
-    //       {
-    //         picture: picture,
-    //       },
-    //       {
-    //         headers: {
-    //           authorization: `Bearer ${userToken}`,
-    //         },
-    //       }
-    //     );
-    //     console.log(response.data);
-    //     setPicture();
-    //   } catch (error) {
-    //     console.log(error.response);
-    //   }
+        {
+          headers: {
+            authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+      setImage(response.data);
+      setIsLoading(true);
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
   return isLoading ? (
@@ -135,7 +133,19 @@ export default function ProfileScreen({ setToken }) {
             <Ionicons
               style={styles.iconImages}
               name={"images"}
-              onPress={uplaodPicture}
+              onPress={async () => {
+                const cameraRollPerm =
+                  await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+                if (cameraRollPerm.status === "granted") {
+                  const pickerResult =
+                    await ImagePicker.launchImageLibraryAsync({
+                      allowsEditing: true,
+                      aspect: [4, 3],
+                    });
+                  handleImagePicked(pickerResult);
+                }
+              }}
             ></Ionicons>
             <Ionicons style={styles.iconCamera} name={"camera"}></Ionicons>
           </View>

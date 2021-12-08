@@ -67,6 +67,7 @@ export default function SignUpScreen({ setToken, navigation }) {
         </View>
         <View>
           <TextInput
+            autoCapitalize="none"
             style={styles.input}
             placeholder="email"
             type="email"

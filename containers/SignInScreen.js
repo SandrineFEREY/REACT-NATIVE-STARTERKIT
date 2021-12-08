@@ -61,6 +61,7 @@ export default function SignInScreen({ setToken }) {
 
         <View>
           <TextInput
+            autoCapitalize="none"
             style={styles.input}
             placeholder="email"
             type="email"
